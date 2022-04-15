@@ -1,0 +1,54 @@
+
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- <style>div.google-visualization-tooltip { transform: rotate(30deg); }</style> -->
+    <script type="text/javascript">
+    google.charts.load('current', {'packages':['timeline']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        // var container = document.getElementById('timeline');
+        var container = document.getElementById('timeline-tooltip');
+        // var container = document.getElementById('example7.1');
+        var chart = new google.visualization.Timeline(container);
+        var dataTable = new google.visualization.DataTable();
+
+        dataTable.addColumn({ type: 'string', id: 'Machine' });
+        dataTable.addColumn({ type: 'string', id: 'Name' });
+		dataTable.addColumn({ type: 'string', role: 'style' });
+        dataTable.addColumn({ type: 'string', role: 'tooltip' });
+		// dataTable.addColumn({ type: 'string', role: 'style' });
+        // dataTable.addColumn({ type: 'date', id: 'Start' });
+        // dataTable.addColumn({ type: 'date', id: 'End' });
+        dataTable.addColumn({ type: 'number', id: 'Start' });
+        dataTable.addColumn({ type: 'number', id: 'End' });
+        var scale = 10;
+        dataTable.addRows([
+['Machine 2', 'NOOP', '#000000', 'NOOP, start:233, finish:241, before O_3,3', 2330, 2410],
+['Machine 0', '4', null, 'Job4, Op0, start:0, finish:83', 0, 830],
+['Machine 1', '4', null, 'Job4, Op3, start:241, finish:260', 2410, 2600],
+['Machine 2', '4', null, 'Job4, Op2, start:117, finish:181', 1170, 1810],
+['Machine 3', '4', null, 'Job4, Op1, start:83, finish:117', 830, 1170],
+['Machine 4', '4', null, 'Job4, Op4, start:629, finish:666', 6290, 6660],
+['Machine 0', '5', null, 'Job5, Op3, start:465, finish:557', 4650, 5570],
+['Machine 1', '5', null, 'Job5, Op0, start:98, finish:152', 980, 1520],
+['Machine 2', '5', null, 'Job5, Op1, start:181, finish:224', 1810, 2240],
+['Machine 3', '5', null, 'Job5, Op4, start:586, finish:648', 5860, 6480],
+['Machine 4', '5', null, 'Job5, Op2, start:369, finish:448', 3690, 4480],
+['Machine 0', '6', null, 'Job6, Op4, start:328, finish:421', 3280, 4210],
+        ]);
+        var options = {
+          // timeline: {showRowLabels: true}, 
+          // avoidOverlappingGridLines: false
+          tooltip: { textStyle: { fontName: 'verdana', fontSize: 30 } }, 
+        }
+        chart.draw(dataTable, options);
+      }
+    </script>
+  </head>
+  <body>
+    <!-- <div id="timeline" style="height: 300px;"></div> -->
+    <div id="timeline-tooltip" style="height: 800px;"></div>
+  </body>
+</html>
+    
