@@ -1,0 +1,50 @@
+
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- <style>div.google-visualization-tooltip { transform: rotate(30deg); }</style> -->
+    <script type="text/javascript">
+    google.charts.load('current', {'packages':['timeline']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        // var container = document.getElementById('timeline');
+        var container = document.getElementById('timeline-tooltip');
+        // var container = document.getElementById('example7.1');
+        var chart = new google.visualization.Timeline(container);
+        var dataTable = new google.visualization.DataTable();
+
+        dataTable.addColumn({ type: 'string', id: 'Machine' });
+        dataTable.addColumn({ type: 'string', id: 'Name' });
+        dataTable.addColumn({ type: 'string', role: 'tooltip' });
+        // dataTable.addColumn({ type: 'date', id: 'Start' });
+        // dataTable.addColumn({ type: 'date', id: 'End' });
+        dataTable.addColumn({ type: 'number', id: 'Start' });
+        dataTable.addColumn({ type: 'number', id: 'End' });
+        var scale = 10;
+        dataTable.addRows([
+    ['Machine 1', '0', 'Job0, Op0, start:1, finish:2', 1000, 2000],
+['Machine 0', '0', 'Job0, Op1, start:3, finish:5', 3000, 5000],
+['Machine 2', '0', 'Job0, Op2, start:5, finish:6', 5000, 6000],
+['Machine 0', '1', 'Job1, Op0, start:0, finish:2', 0, 2000],
+['Machine 0', '1', 'Job1, Op1, start:2, finish:3', 2000, 3000],
+['Machine 1', '1', 'Job1, Op2, start:3, finish:4', 3000, 4000],
+['Machine 1', '2', 'Job2, Op0, start:0, finish:1', 0, 1000],
+['Machine 2', '2', 'Job2, Op1, start:1, finish:5', 1000, 5000],
+['Machine 1', '2', 'Job2, Op2, start:5, finish:6', 5000, 6000],
+
+        ]);
+        var options = {
+          // timeline: {showRowLabels: true}, 
+          // avoidOverlappingGridLines: false
+          tooltip: { textStyle: { fontName: 'verdana', fontSize: 30 } }, 
+        }
+        chart.draw(dataTable, options);
+      }
+    </script>
+  </head>
+  <body>
+    <!-- <div id="timeline" style="height: 300px;"></div> -->
+    <div id="timeline-tooltip" style="height: 800px;"></div>
+  </body>
+</html>
+    

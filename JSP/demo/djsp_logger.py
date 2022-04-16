@@ -35,6 +35,7 @@ class DJSP_Logger(object):
 
         dataTable.addColumn({ type: 'string', id: 'Machine' });
         dataTable.addColumn({ type: 'string', id: 'Name' });
+        dataTable.addColumn({ type: 'string', role: 'style' });
         dataTable.addColumn({ type: 'string', role: 'tooltip' });
         // dataTable.addColumn({ type: 'date', id: 'Start' });
         // dataTable.addColumn({ type: 'date', id: 'End' });
@@ -122,7 +123,7 @@ class DJSP_Logger(object):
                 res[op_info[key]].append(op_info)
             else:
                 res[op_info[key]] = [op_info]
-        for key, op_infos in res.items():
+        for k, op_infos in res.items():
             op_infos.sort(key = lambda op_info : op_info['start_time'])
         # pprint(res)
         return res
@@ -194,21 +195,38 @@ class DJSP_Logger(object):
             empty_intervals = []
             for op_info in op_infos_in_machine_id:
                 if left_time < op_info['finish_time'] and op_info['finish_time'] <= right_time:
-                    nonempty_intervals.append((op_info['start_time'], op_info['finish_time']))
-            # print(nonempty_intervals)
+                    # print('op_info:', op_info)
+                    nonempty_intervals.append([op_info['start_time'], op_info['finish_time']])
+            # print('\tnonempty_intervals:', nonempty_intervals)
             if len(nonempty_intervals) == 0:
                 return [[left_time, right_time]]
-            if left_time < nonempty_intervals[0][0]:
+            # left = left_time
+            # if left < nonempty_intervals[0][1]:
+            #     left = nonempty_intervals[0][1]
+            # for i, interval in enumerate(nonempty_intervals):
+            #     if left < interval[0]:
+            #         empty_intervals.append([left, interval[0]])
+            #         left = interval[1]
+            # if left < right_time:
+            #     empty_intervals.append([left, right_time])
+            # print('\tempty_intervals:', empty_intervals)
+
+            # if left_time < nonempty_intervals[0][0]:
+            #     empty_intervals.append([left_time, nonempty_intervals[0][0]])
+            if nonempty_intervals[0][0] < left_time:
+                left_time = nonempty_intervals[0][1]
+            elif nonempty_intervals[0][0] > left_time:
                 empty_intervals.append([left_time, nonempty_intervals[0][0]])
             if nonempty_intervals[-1][1] < right_time:
                 empty_intervals.append([nonempty_intervals[-1][1], right_time])
-            # for i, interval in enumerate(nonempty_intervals):
-            #     if i == 0 or i == len(nonempty_intervals)-1:
-            #         continue
-            #     noop_start = nonempty_intervals[i][1]
-            #     noop_finish = nonempty_intervals[i+1][0]
-            #     if noop_start < noop_finish:
-            #         empty_intervals.append([noop_start, noop_finish])
+            for i, interval in enumerate(nonempty_intervals):
+                if i == len(nonempty_intervals)-1:
+                    continue
+                noop_start = nonempty_intervals[i][1]
+                noop_finish = nonempty_intervals[i+1][0]
+                if noop_start < noop_finish:
+                    empty_intervals.append([noop_start, noop_finish])
+            # print('\tempty_intervals:', empty_intervals)
             return empty_intervals
     def find_noop(self):
         history_in_job_id = self.arrange_history_by('job_id', need_sort=True)
@@ -216,6 +234,8 @@ class DJSP_Logger(object):
         for job_id, op_infos in history_in_job_id.items():
             previous_op_info = None
             for op_id, op_info in enumerate(op_infos):
+                # print('pre_op_info:\t', previous_op_info)
+                # print('op_info:\t', op_info)
                 if previous_op_info == None:
                     empty_intervals = self._find_all_empty_intervals(0, op_info['start_time'], op_info['machine_id'])
                 else:
@@ -223,17 +243,18 @@ class DJSP_Logger(object):
                 for interval in empty_intervals:
                     noop_start = interval[0]
                     noop_finish = interval[1]
-                    noop_info = {
-                        'Order':        None,
-                        'job_id':       op_info['job_id'],
-                        'op_id':        op_info['op_id'],
-                        'machine_id':   op_info['machine_id'],
-                        'start_time':   noop_start, 
-                        'process_time': noop_finish-noop_start,
-                        'finish_time':  noop_finish,
-                        'job_type':     'NOOP',
-                    }
-                    self.history.append(noop_info)
+                    if noop_start < noop_finish:
+                        noop_info = {
+                            'Order':        None,
+                            'job_id':       op_info['job_id'],
+                            'op_id':        op_info['op_id'],
+                            'machine_id':   op_info['machine_id'],
+                            'start_time':   noop_start, 
+                            'process_time': noop_finish-noop_start,
+                            'finish_time':  noop_finish,
+                            'job_type':     'NOOP',
+                        }
+                        self.history.append(noop_info)
                 previous_op_info = op_info
 
     # def find_noop(self):

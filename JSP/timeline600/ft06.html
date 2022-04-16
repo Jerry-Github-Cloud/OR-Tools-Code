@@ -1,0 +1,77 @@
+
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- <style>div.google-visualization-tooltip { transform: rotate(30deg); }</style> -->
+    <script type="text/javascript">
+    google.charts.load('current', {'packages':['timeline']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        // var container = document.getElementById('timeline');
+        var container = document.getElementById('timeline-tooltip');
+        // var container = document.getElementById('example7.1');
+        var chart = new google.visualization.Timeline(container);
+        var dataTable = new google.visualization.DataTable();
+
+        dataTable.addColumn({ type: 'string', id: 'Machine' });
+        dataTable.addColumn({ type: 'string', id: 'Name' });
+        dataTable.addColumn({ type: 'string', role: 'tooltip' });
+        // dataTable.addColumn({ type: 'date', id: 'Start' });
+        // dataTable.addColumn({ type: 'date', id: 'End' });
+        dataTable.addColumn({ type: 'number', id: 'Start' });
+        dataTable.addColumn({ type: 'number', id: 'End' });
+        var scale = 10;
+        dataTable.addRows([
+    ['Machine 0', '3', 'Job3, Op1, start:13, finish:18', 130, 180],
+['Machine 0', '2', 'Job2, Op3, start:18, finish:27', 180, 270],
+['Machine 0', '0', 'Job0, Op1, start:27, finish:30', 270, 300],
+['Machine 0', '5', 'Job5, Op3, start:30, finish:40', 300, 400],
+['Machine 0', '1', 'Job1, Op4, start:40, finish:50', 400, 500],
+['Machine 0', '4', 'Job4, Op4, start:50, finish:53', 500, 530],
+['Machine 1', '1', 'Job1, Op0, start:0, finish:8', 0, 80],
+['Machine 1', '3', 'Job3, Op0, start:8, finish:13', 80, 130],
+['Machine 1', '5', 'Job5, Op0, start:14, finish:17', 140, 170],
+['Machine 1', '4', 'Job4, Op1, start:22, finish:25', 220, 250],
+['Machine 1', '2', 'Job2, Op4, start:28, finish:29', 280, 290],
+['Machine 1', '0', 'Job0, Op2, start:30, finish:36', 300, 360],
+['Machine 2', '2', 'Job2, Op0, start:0, finish:5', 0, 50],
+['Machine 2', '1', 'Job1, Op1, start:8, finish:13', 80, 130],
+['Machine 2', '4', 'Job4, Op0, start:13, finish:22', 130, 220],
+['Machine 2', '0', 'Job0, Op0, start:22, finish:23', 220, 230],
+['Machine 2', '3', 'Job3, Op2, start:28, finish:33', 280, 330],
+['Machine 2', '5', 'Job5, Op5, start:52, finish:53', 520, 530],
+['Machine 3', '2', 'Job2, Op1, start:5, finish:9', 50, 90],
+['Machine 3', '5', 'Job5, Op1, start:17, finish:20', 170, 200],
+['Machine 3', '3', 'Job3, Op3, start:33, finish:36', 330, 360],
+['Machine 3', '0', 'Job0, Op3, start:36, finish:43', 360, 430],
+['Machine 3', '1', 'Job1, Op5, start:50, finish:54', 500, 540],
+['Machine 3', '4', 'Job4, Op5, start:54, finish:55', 540, 550],
+['Machine 4', '1', 'Job1, Op2, start:14, finish:24', 140, 240],
+['Machine 4', '4', 'Job4, Op2, start:25, finish:30', 250, 300],
+['Machine 4', '2', 'Job2, Op5, start:30, finish:37', 300, 370],
+['Machine 4', '3', 'Job3, Op4, start:37, finish:45', 370, 450],
+['Machine 4', '5', 'Job5, Op4, start:45, finish:49', 450, 490],
+['Machine 4', '0', 'Job0, Op5, start:49, finish:55', 490, 550],
+['Machine 5', '2', 'Job2, Op2, start:9, finish:17', 90, 170],
+['Machine 5', '5', 'Job5, Op2, start:20, finish:29', 200, 290],
+['Machine 5', '1', 'Job1, Op3, start:29, finish:39', 290, 390],
+['Machine 5', '4', 'Job4, Op3, start:39, finish:43', 390, 430],
+['Machine 5', '0', 'Job0, Op4, start:43, finish:46', 430, 460],
+['Machine 5', '3', 'Job3, Op5, start:46, finish:55', 460, 550],
+
+        ]);
+        var options = {
+          // timeline: {showRowLabels: true}, 
+          // avoidOverlappingGridLines: false
+          tooltip: { textStyle: { fontName: 'verdana', fontSize: 30 } }, 
+        }
+        chart.draw(dataTable, options);
+      }
+    </script>
+  </head>
+  <body>
+    <!-- <div id="timeline" style="height: 300px;"></div> -->
+    <div id="timeline-tooltip" style="height: 800px;"></div>
+  </body>
+</html>
+    

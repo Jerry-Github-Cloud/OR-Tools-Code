@@ -1,0 +1,77 @@
+
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- <style>div.google-visualization-tooltip { transform: rotate(30deg); }</style> -->
+    <script type="text/javascript">
+    google.charts.load('current', {'packages':['timeline']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        // var container = document.getElementById('timeline');
+        var container = document.getElementById('timeline-tooltip');
+        // var container = document.getElementById('example7.1');
+        var chart = new google.visualization.Timeline(container);
+        var dataTable = new google.visualization.DataTable();
+
+        dataTable.addColumn({ type: 'string', id: 'Machine' });
+        dataTable.addColumn({ type: 'string', id: 'Name' });
+        dataTable.addColumn({ type: 'string', role: 'tooltip' });
+        // dataTable.addColumn({ type: 'date', id: 'Start' });
+        // dataTable.addColumn({ type: 'date', id: 'End' });
+        dataTable.addColumn({ type: 'number', id: 'Start' });
+        dataTable.addColumn({ type: 'number', id: 'End' });
+        var scale = 10;
+        dataTable.addRows([
+    ['Machine 0', 'Job3', 'Job3, Op1, start:13, finish:18', 130, 180],
+['Machine 0', 'Job0', 'Job0, Op1, start:18, finish:21', 180, 210],
+['Machine 0', 'Job2', 'Job2, Op3, start:21, finish:30', 210, 300],
+['Machine 0', 'Job5', 'Job5, Op3, start:30, finish:40', 300, 400],
+['Machine 0', 'Job1', 'Job1, Op4, start:40, finish:50', 400, 500],
+['Machine 0', 'Job4', 'Job4, Op4, start:50, finish:53', 500, 530],
+['Machine 1', 'Job1', 'Job1, Op0, start:0, finish:8', 0, 80],
+['Machine 1', 'Job3', 'Job3, Op0, start:8, finish:13', 80, 130],
+['Machine 1', 'Job5', 'Job5, Op0, start:13, finish:16', 130, 160],
+['Machine 1', 'Job4', 'Job4, Op1, start:22, finish:25', 220, 250],
+['Machine 1', 'Job0', 'Job0, Op2, start:26, finish:32', 260, 320],
+['Machine 1', 'Job2', 'Job2, Op4, start:37, finish:38', 370, 380],
+['Machine 2', 'Job0', 'Job0, Op0, start:2, finish:3', 20, 30],
+['Machine 2', 'Job2', 'Job2, Op0, start:3, finish:8', 30, 80],
+['Machine 2', 'Job1', 'Job1, Op1, start:8, finish:13', 80, 130],
+['Machine 2', 'Job4', 'Job4, Op0, start:13, finish:22', 130, 220],
+['Machine 2', 'Job3', 'Job3, Op2, start:22, finish:27', 220, 270],
+['Machine 2', 'Job5', 'Job5, Op5, start:51, finish:52', 510, 520],
+['Machine 3', 'Job2', 'Job2, Op1, start:8, finish:12', 80, 120],
+['Machine 3', 'Job5', 'Job5, Op1, start:16, finish:19', 160, 190],
+['Machine 3', 'Job3', 'Job3, Op3, start:27, finish:30', 270, 300],
+['Machine 3', 'Job0', 'Job0, Op3, start:32, finish:39', 320, 390],
+['Machine 3', 'Job1', 'Job1, Op5, start:50, finish:54', 500, 540],
+['Machine 3', 'Job4', 'Job4, Op5, start:54, finish:55', 540, 550],
+['Machine 4', 'Job1', 'Job1, Op2, start:15, finish:25', 150, 250],
+['Machine 4', 'Job4', 'Job4, Op2, start:25, finish:30', 250, 300],
+['Machine 4', 'Job3', 'Job3, Op4, start:30, finish:38', 300, 380],
+['Machine 4', 'Job2', 'Job2, Op5, start:38, finish:45', 380, 450],
+['Machine 4', 'Job5', 'Job5, Op4, start:45, finish:49', 450, 490],
+['Machine 4', 'Job0', 'Job0, Op5, start:49, finish:55', 490, 550],
+['Machine 5', 'Job2', 'Job2, Op2, start:12, finish:20', 120, 200],
+['Machine 5', 'Job5', 'Job5, Op2, start:20, finish:29', 200, 290],
+['Machine 5', 'Job1', 'Job1, Op3, start:29, finish:39', 290, 390],
+['Machine 5', 'Job0', 'Job0, Op4, start:39, finish:42', 390, 420],
+['Machine 5', 'Job4', 'Job4, Op3, start:42, finish:46', 420, 460],
+['Machine 5', 'Job3', 'Job3, Op5, start:46, finish:55', 460, 550],
+
+        ]);
+        var options = {
+          // timeline: {showRowLabels: true}, 
+          // avoidOverlappingGridLines: false
+          tooltip: { textStyle: { fontName: 'verdana', fontSize: 30 } }, 
+        }
+        chart.draw(dataTable, options);
+      }
+    </script>
+  </head>
+  <body>
+    <!-- <div id="timeline" style="height: 300px;"></div> -->
+    <div id="timeline-tooltip" style="height: 800px;"></div>
+  </body>
+</html>
+    

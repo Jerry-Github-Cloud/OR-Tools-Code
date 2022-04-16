@@ -1,0 +1,191 @@
+
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- <style>div.google-visualization-tooltip { transform: rotate(30deg); }</style> -->
+    <script type="text/javascript">
+    google.charts.load('current', {'packages':['timeline']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        // var container = document.getElementById('timeline');
+        var container = document.getElementById('timeline-tooltip');
+        // var container = document.getElementById('example7.1');
+        var chart = new google.visualization.Timeline(container);
+        var dataTable = new google.visualization.DataTable();
+
+        dataTable.addColumn({ type: 'string', id: 'Machine' });
+        dataTable.addColumn({ type: 'string', id: 'Name' });
+        dataTable.addColumn({ type: 'string', role: 'tooltip' });
+        // dataTable.addColumn({ type: 'date', id: 'Start' });
+        // dataTable.addColumn({ type: 'date', id: 'End' });
+        dataTable.addColumn({ type: 'number', id: 'Start' });
+        dataTable.addColumn({ type: 'number', id: 'End' });
+        var scale = 10;
+        dataTable.addRows([
+    ['Machine 0', '13', 'Job13, Op1, start:37, finish:90', 370, 900],
+['Machine 0', '5', 'Job5, Op1, start:90, finish:131', 900, 1310],
+['Machine 0', '2', 'Job2, Op3, start:137, finish:152', 1370, 1520],
+['Machine 0', '7', 'Job7, Op3, start:162, finish:233', 1620, 2330],
+['Machine 0', '11', 'Job11, Op2, start:233, finish:330', 2330, 3300],
+['Machine 0', '12', 'Job12, Op4, start:330, finish:358', 3300, 3580],
+['Machine 0', '10', 'Job10, Op2, start:358, finish:445', 3580, 4450],
+['Machine 0', '1', 'Job1, Op5, start:445, finish:520', 4450, 5200],
+['Machine 0', '8', 'Job8, Op7, start:520, finish:593', 5200, 5930],
+['Machine 0', '4', 'Job4, Op5, start:596, finish:658', 5960, 6580],
+['Machine 0', '9', 'Job9, Op5, start:658, finish:674', 6580, 6740],
+['Machine 0', '6', 'Job6, Op4, start:724, finish:769', 7240, 7690],
+['Machine 0', '0', 'Job0, Op7, start:769, finish:781', 7690, 7810],
+['Machine 0', '3', 'Job3, Op8, start:781, finish:833', 7810, 8330],
+['Machine 0', '14', 'Job14, Op9, start:872, finish:920', 8720, 9200],
+['Machine 1', '13', 'Job13, Op0, start:0, finish:37', 0, 370],
+['Machine 1', '7', 'Job7, Op1, start:66, finish:74', 660, 740],
+['Machine 1', '8', 'Job8, Op1, start:74, finish:111', 740, 1110],
+['Machine 1', '11', 'Job11, Op0, start:111, finish:157', 1110, 1570],
+['Machine 1', '10', 'Job10, Op0, start:157, finish:229', 1570, 2290],
+['Machine 1', '4', 'Job4, Op2, start:229, finish:281', 2290, 2810],
+['Machine 1', '12', 'Job12, Op3, start:281, finish:305', 2810, 3050],
+['Machine 1', '1', 'Job1, Op3, start:305, finish:319', 3050, 3190],
+['Machine 1', '5', 'Job5, Op6, start:494, finish:544', 4940, 5440],
+['Machine 1', '2', 'Job2, Op8, start:548, finish:593', 5480, 5930],
+['Machine 1', '14', 'Job14, Op4, start:631, finish:671', 6310, 6710],
+['Machine 1', '0', 'Job0, Op6, start:760, finish:767', 7600, 7670],
+['Machine 1', '9', 'Job9, Op8, start:770, finish:795', 7700, 7950],
+['Machine 1', '3', 'Job3, Op9, start:833, finish:921', 8330, 9210],
+['Machine 1', '6', 'Job6, Op9, start:921, finish:927', 9210, 9270],
+['Machine 2', '9', 'Job9, Op1, start:39, finish:54', 390, 540],
+['Machine 2', '2', 'Job2, Op2, start:103, finish:137', 1030, 1370],
+['Machine 2', '3', 'Job3, Op1, start:137, finish:211', 1370, 2110],
+['Machine 2', '1', 'Job1, Op1, start:211, finish:231', 2110, 2310],
+['Machine 2', '4', 'Job4, Op3, start:281, finish:342', 2810, 3420],
+['Machine 2', '11', 'Job11, Op3, start:342, finish:363', 3420, 3630],
+['Machine 2', '8', 'Job8, Op5, start:409, finish:418', 4090, 4180],
+['Machine 2', '14', 'Job14, Op2, start:426, finish:475', 4260, 4750],
+['Machine 2', '10', 'Job10, Op3, start:475, finish:541', 4750, 5410],
+['Machine 2', '0', 'Job0, Op3, start:553, finish:647', 5530, 6470],
+['Machine 2', '5', 'Job5, Op8, start:687, finish:710', 6870, 7100],
+['Machine 2', '7', 'Job7, Op9, start:710, finish:805', 7100, 8050],
+['Machine 2', '12', 'Job12, Op8, start:805, finish:878', 8050, 8780],
+['Machine 2', '6', 'Job6, Op7, start:879, finish:904', 8790, 9040],
+['Machine 2', '13', 'Job13, Op9, start:904, finish:916', 9040, 9160],
+['Machine 3', '9', 'Job9, Op0, start:0, finish:39', 0, 390],
+['Machine 3', '12', 'Job12, Op1, start:39, finish:64', 390, 640],
+['Machine 3', '3', 'Job3, Op0, start:64, finish:91', 640, 910],
+['Machine 3', '1', 'Job1, Op0, start:91, finish:104', 910, 1040],
+['Machine 3', '6', 'Job6, Op0, start:104, finish:199', 1040, 1990],
+['Machine 3', '11', 'Job11, Op1, start:199, finish:219', 1990, 2190],
+['Machine 3', '5', 'Job5, Op3, start:219, finish:272', 2190, 2720],
+['Machine 3', '8', 'Job8, Op3, start:272, finish:323', 2720, 3230],
+['Machine 3', '13', 'Job13, Op4, start:363, finish:434', 3630, 4340],
+['Machine 3', '7', 'Job7, Op7, start:466, finish:542', 4660, 5420],
+['Machine 3', '2', 'Job2, Op7, start:542, finish:548', 5420, 5480],
+['Machine 3', '14', 'Job14, Op3, start:548, finish:631', 5480, 6310],
+['Machine 3', '0', 'Job0, Op5, start:668, finish:760', 6680, 7600],
+['Machine 3', '4', 'Job4, Op8, start:760, finish:850', 7600, 8500],
+['Machine 3', '10', 'Job10, Op9, start:865, finish:925', 8650, 9250],
+['Machine 4', '7', 'Job7, Op0, start:0, finish:65', 0, 650],
+['Machine 4', '4', 'Job4, Op0, start:65, finish:153', 650, 1530],
+['Machine 4', '8', 'Job8, Op2, start:153, finish:181', 1530, 1810],
+['Machine 4', '5', 'Job5, Op2, start:181, finish:219', 1810, 2190],
+['Machine 4', '13', 'Job13, Op3, start:219, finish:257', 2190, 2570],
+['Machine 4', '1', 'Job1, Op2, start:257, finish:264', 2570, 2640],
+['Machine 4', '10', 'Job10, Op1, start:264, finish:312', 2640, 3120],
+['Machine 4', '14', 'Job14, Op0, start:312, finish:402', 3120, 4020],
+['Machine 4', '3', 'Job3, Op3, start:402, finish:464', 4020, 4640],
+['Machine 4', '0', 'Job0, Op2, start:466, finish:553', 4660, 5530],
+['Machine 4', '2', 'Job2, Op9, start:593, finish:669', 5930, 6690],
+['Machine 4', '9', 'Job9, Op6, start:674, finish:720', 6740, 7200],
+['Machine 4', '11', 'Job11, Op7, start:771, finish:830', 7710, 8300],
+['Machine 4', '6', 'Job6, Op6, start:842, finish:865', 8420, 8650],
+['Machine 4', '12', 'Job12, Op9, start:878, finish:923', 8780, 9230],
+['Machine 5', '12', 'Job12, Op0, start:0, finish:23', 0, 230],
+['Machine 5', '0', 'Job0, Op1, start:103, finish:194', 1030, 1940],
+['Machine 5', '2', 'Job2, Op5, start:286, finish:375', 2860, 3750],
+['Machine 5', '7', 'Job7, Op6, start:375, finish:463', 3750, 4630],
+['Machine 5', '6', 'Job6, Op3, start:463, finish:515', 4630, 5150],
+['Machine 5', '13', 'Job13, Op5, start:515, finish:544', 5150, 5440],
+['Machine 5', '5', 'Job5, Op7, start:544, finish:622', 5440, 6220],
+['Machine 5', '3', 'Job3, Op6, start:622, finish:631', 6220, 6310],
+['Machine 5', '1', 'Job1, Op7, start:631, finish:647', 6310, 6470],
+['Machine 5', '8', 'Job8, Op9, start:647, finish:737', 6470, 7370],
+['Machine 5', '4', 'Job4, Op7, start:737, finish:746', 7370, 7460],
+['Machine 5', '9', 'Job9, Op7, start:746, finish:770', 7460, 7700],
+['Machine 5', '10', 'Job10, Op8, start:770, finish:865', 7700, 8650],
+['Machine 5', '14', 'Job14, Op8, start:865, finish:872', 8650, 8720],
+['Machine 5', '11', 'Job11, Op9, start:872, finish:927', 8720, 9270],
+['Machine 6', '5', 'Job5, Op0, start:0, finish:71', 0, 710],
+['Machine 6', '9', 'Job9, Op2, start:71, finish:154', 710, 1540],
+['Machine 6', '4', 'Job4, Op1, start:154, finish:169', 1540, 1690],
+['Machine 6', '12', 'Job12, Op2, start:169, finish:247', 1690, 2470],
+['Machine 6', '3', 'Job3, Op2, start:247, finish:335', 2470, 3350],
+['Machine 6', '7', 'Job7, Op5, start:335, finish:363', 3350, 3630],
+['Machine 6', '6', 'Job6, Op2, start:363, finish:429', 3630, 4290],
+['Machine 6', '8', 'Job8, Op6, start:429, finish:484', 4290, 4840],
+['Machine 6', '2', 'Job2, Op6, start:484, finish:537', 4840, 5370],
+['Machine 6', '1', 'Job1, Op6, start:537, finish:614', 5370, 6140],
+['Machine 6', '10', 'Job10, Op5, start:614, finish:668', 6140, 6680],
+['Machine 6', '14', 'Job14, Op5, start:683, finish:706', 6830, 7060],
+['Machine 6', '13', 'Job13, Op8, start:765, finish:820', 7650, 8200],
+['Machine 6', '11', 'Job11, Op8, start:830, finish:864', 8300, 8640],
+['Machine 6', '0', 'Job0, Op9, start:907, finish:926', 9070, 9260],
+['Machine 7', '2', 'Job2, Op1, start:77, finish:97', 770, 970],
+['Machine 7', '13', 'Job13, Op2, start:97, finish:184', 970, 1840],
+['Machine 7', '9', 'Job9, Op4, start:198, finish:251', 1980, 2510],
+['Machine 7', '7', 'Job7, Op4, start:251, finish:316', 2510, 3160],
+['Machine 7', '5', 'Job5, Op4, start:316, finish:407', 3160, 4070],
+['Machine 7', '12', 'Job12, Op5, start:407, finish:490', 4070, 4900],
+['Machine 7', '3', 'Job3, Op4, start:490, finish:542', 4900, 5420],
+['Machine 7', '4', 'Job4, Op4, start:542, finish:596', 5420, 5960],
+['Machine 7', '8', 'Job8, Op8, start:596, finish:647', 5960, 6470],
+['Machine 7', '0', 'Job0, Op4, start:647, finish:668', 6470, 6680],
+['Machine 7', '10', 'Job10, Op6, start:668, finish:707', 6680, 7070],
+['Machine 7', '11', 'Job11, Op5, start:707, finish:744', 7070, 7440],
+['Machine 7', '14', 'Job14, Op6, start:744, finish:809', 7440, 8090],
+['Machine 7', '1', 'Job1, Op8, start:809, finish:904', 8090, 9040],
+['Machine 7', '6', 'Job6, Op8, start:904, finish:921', 9040, 9210],
+['Machine 8', '2', 'Job2, Op0, start:0, finish:77', 0, 770],
+['Machine 8', '7', 'Job7, Op2, start:77, finish:162', 770, 1620],
+['Machine 8', '8', 'Job8, Op4, start:323, finish:409', 3230, 4090],
+['Machine 8', '14', 'Job14, Op1, start:409, finish:426', 4090, 4260],
+['Machine 8', '5', 'Job5, Op5, start:426, finish:494', 4260, 4940],
+['Machine 8', '12', 'Job12, Op6, start:494, finish:522', 4940, 5220],
+['Machine 8', '3', 'Job3, Op5, start:542, finish:611', 5420, 6110],
+['Machine 8', '13', 'Job13, Op7, start:611, finish:644', 6110, 6440],
+['Machine 8', '4', 'Job4, Op6, start:658, finish:717', 6580, 7170],
+['Machine 8', '10', 'Job10, Op7, start:717, finish:752', 7170, 7520],
+['Machine 8', '11', 'Job11, Op6, start:752, finish:771', 7520, 7710],
+['Machine 8', '0', 'Job0, Op8, start:781, finish:792', 7810, 7920],
+['Machine 8', '6', 'Job6, Op5, start:792, finish:822', 7920, 8220],
+['Machine 8', '9', 'Job9, Op9, start:838, finish:920', 8380, 9200],
+['Machine 8', '1', 'Job1, Op9, start:920, finish:927', 9200, 9270],
+['Machine 9', '8', 'Job8, Op0, start:0, finish:37', 0, 370],
+['Machine 9', '0', 'Job0, Op0, start:37, finish:103', 370, 1030],
+['Machine 9', '9', 'Job9, Op3, start:154, finish:198', 1540, 1980],
+['Machine 9', '2', 'Job2, Op4, start:198, finish:286', 1980, 2860],
+['Machine 9', '6', 'Job6, Op1, start:287, finish:323', 2870, 3230],
+['Machine 9', '1', 'Job1, Op4, start:323, finish:389', 3230, 3890],
+['Machine 9', '12', 'Job12, Op7, start:522, finish:527', 5220, 5270],
+['Machine 9', '10', 'Job10, Op4, start:541, finish:546', 5410, 5460],
+['Machine 9', '7', 'Job7, Op8, start:548, finish:575', 5480, 5750],
+['Machine 9', '13', 'Job13, Op6, start:575, finish:587', 5750, 5870],
+['Machine 9', '11', 'Job11, Op4, start:592, finish:638', 5920, 6380],
+['Machine 9', '3', 'Job3, Op7, start:681, finish:779', 6810, 7790],
+['Machine 9', '14', 'Job14, Op7, start:809, finish:836', 8090, 8360],
+['Machine 9', '5', 'Job5, Op9, start:836, finish:908', 8360, 9080],
+['Machine 9', '4', 'Job4, Op9, start:917, finish:922', 9170, 9220],
+
+        ]);
+        var options = {
+          // timeline: {showRowLabels: true}, 
+          // avoidOverlappingGridLines: false
+          tooltip: { textStyle: { fontName: 'verdana', fontSize: 30 } }, 
+        }
+        chart.draw(dataTable, options);
+      }
+    </script>
+  </head>
+  <body>
+    <!-- <div id="timeline" style="height: 300px;"></div> -->
+    <div id="timeline-tooltip" style="height: 800px;"></div>
+  </body>
+</html>
+    

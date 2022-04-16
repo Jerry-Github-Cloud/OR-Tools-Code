@@ -19,6 +19,10 @@ class DJSP_Plotter(object):
         if op_info['job_type'] == 'NOOP':
             return 'NOOP'
         return '%d' %(op_info['job_id'])
+    def _get_color(self, op_info):
+        if op_info['job_type'] == 'NOOP':
+            return '#000000'
+        return ''
     def plot_googlechart_timeline(self, html_out_file):
         jsp_result_dir = '../ortools_result'
         out_dir = '.'
@@ -33,6 +37,7 @@ class DJSP_Plotter(object):
             d = [ 
                 'Machine %d' %(op_info['machine_id']), 
                 self._get_job_id(op_info),
+                self._get_color(op_info),
                 self._get_tooltip(op_info),
                 op_info['start_time']*scale, op_info['finish_time']*scale ]
             line = str(d) + ',\n'
@@ -106,7 +111,7 @@ if __name__ == '__main__':
     ### run one case
     # ortools_result_dir = '../ortools_result_6000'
     # html_out_dir = 'timeline/6000_noop'
-    # file_name = 'ft06.json'
+    # file_name = 'la01.json'
     # json_in_file = os.path.join(ortools_result_dir, file_name)
     # logger = DJSP_Logger()
     # logger.load(json_in_file)
