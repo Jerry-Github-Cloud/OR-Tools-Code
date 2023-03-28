@@ -1,7 +1,14 @@
+import os
+import json
 import numpy as np
 from ortools.sat.python import cp_model
 
-def solve(all_block, panel_width, panel_height):
+def solve(path, panel_width, panel_height):
+    with open(path, 'r') as fp:
+        data = json.load(fp)
+    panel_width = data["width"]
+    panel_height = data["height"]
+    all_block = data["block"]
     # Number of blocks
     n = len(all_block)
 
@@ -38,10 +45,10 @@ def solve(all_block, panel_width, panel_height):
     # Non-overlapping constraints
     for i in range(n):
         for j in range(i + 1, n):
-            bx_ij = model.NewBoolVar(f'bx_{i}_{j}')
-            bx_ji = model.NewBoolVar(f'bx_{j}_{i}')
-            by_ij = model.NewBoolVar(f'by_{i}_{j}')
-            by_ji = model.NewBoolVar(f'by_{j}_{i}')
+            bx_ij = model.NewBoolVar(f"bx_{i}_{j}")
+            bx_ji = model.NewBoolVar(f"bx_{j}_{i}")
+            by_ij = model.NewBoolVar(f"by_{i}_{j}")
+            by_ji = model.NewBoolVar(f"by_{j}_{i}")
 
             model.Add(all_x_ed[i] <= all_x_st[j] + panel_width * bx_ij)
             model.Add(all_x_ed[j] <= all_x_st[i] + panel_width * bx_ji)
@@ -71,8 +78,7 @@ def solve(all_block, panel_width, panel_height):
     block_utilization = model.NewIntVar(0, 1 * scale, "block_utilization")
     model.AddDivisionEquality(
         block_utilization,
-        num_blocks_on_panel *
-        scale,
+        num_blocks_on_panel * scale,
         n)
 
     # model.Maximize(panel_coverage * (1 / scale) - 
@@ -83,7 +89,7 @@ def solve(all_block, panel_width, panel_height):
     solver = cp_model.CpSolver()
     status = solver.Solve(model)
 
-    # Print the result
+    # Print
     if status == cp_model.OPTIMAL:
         positions = [(solver.Value(all_x_st[i]), solver.Value(all_y_st[i]))
                      for i in range(n)]
@@ -94,6 +100,15 @@ def solve(all_block, panel_width, panel_height):
               f"panel_coverage: {solver.Value(panel_coverage) / scale}\n"
               f"block_utilization: {solver.Value(block_utilization) / scale}\n"
               f"objective: {solver.ObjectiveValue()}")
+        for i, block in enumerate(all_block):
+            all_block[i]['x'] = solver.Value(all_x_st[i])
+            all_block[i]['y'] = solver.Value(all_y_st[i])
+        result = {}
+        result['width'] = panel_width
+        result['height'] = panel_height
+        result["block"] = all_block
+        with open(os.path.join(result_path, file_name), 'w') as fp:
+            json.dump(result, fp, indent=4)
     elif cp_model.INFEASIBLE:
         print("INFEASIBLE")
 
@@ -116,62 +131,14 @@ def generate_circle_matrix(size):
 def generate_wafer(diameter):
     # matrix = generate_circle_matrix(diameter)
     matrix = np.ones((diameter, diameter), dtype=int)
-    matrix[0, 0] = 0
-    matrix[0, 1] = 0
-    matrix[0, 2] = 0
-    matrix[1, 0] = 0
-    matrix[2, 0] = 0
-    matrix[1, 1] = 0
-
 
 def wafer2blocks(wafer):
     pass
 
 if __name__ == "__main__":
-    # Input 1
-    # all_block = [
-    #     {"w": 1, "h": 5, "x": None, "y": None}, 
-    #     {"w": 2, "h": 4, "x": None, "y": None}, 
-    #     {"w": 3, "h": 3, "x": None, "y": None}, 
-    #     {"w": 5, "h": 1, "x": None, "y": None}, 
-    #     {"w": 3, "h": 1, "x": None, "y": None}, 
-    #     {"w": 2, "h": 2, "x": None, "y": None}, 
-    #     {"w": 3, "h": 5, "x": None, "y": None}, 
-    #     {"w": 3, "h": 2, "x": None, "y": None}, 
-    # ]
-    # panel_width = 6
-    # panel_height = 6
-    # solve(all_block, panel_width, panel_height)
-
-    # Input 2
-    all_block = [
-        {"w": 2, "h": 2, "x": 0, "y": 0, "border": True}, 
-        {"w": 1, "h": 1, "x": 0, "y": 2, "border": True}, 
-        {"w": 1, "h": 1, "x": 2, "y": 0, "border": True}, 
-        {"w": 2, "h": 2, "x": 0, "y": 8, "border": True}, 
-        {"w": 1, "h": 1, "x": 0, "y": 7, "border": True}, 
-        {"w": 1, "h": 1, "x": 2, "y": 9, "border": True}, 
-        {"w": 2, "h": 2, "x": 8, "y": 0, "border": True}, 
-        {"w": 1, "h": 1, "x": 7, "y": 0, "border": True}, 
-        {"w": 1, "h": 1, "x": 9, "y": 2, "border": True}, 
-        {"w": 2, "h": 2, "x": 8, "y": 8, "border": True}, 
-        {"w": 1, "h": 1, "x": 9, "y": 7, "border": True}, 
-        {"w": 1, "h": 1, "x": 7, "y": 9, "border": True}, 
-        {"w": 1, "h": 1, "x": 2, "y": 3, "border": True}, 
-        {"w": 1, "h": 1, "x": 3, "y": 7, "border": True}, 
-        {"w": 1, "h": 1, "x": 4, "y": 4, "border": True}, 
-        {"w": 1, "h": 1, "x": 5, "y": 5, "border": True}, 
-        {"w": 2, "h": 1, "x": 6, "y": 3, "border": True}, 
-        {"w": 1, "h": 1, "x": 8, "y": 5, "border": True}, 
-        {"w": 2, "h": 2, "x": None, "y": None, "border": False}, 
-        {"w": 1, "h": 5, "x": None, "y": None, "border": False}, 
-        {"w": 2, "h": 4, "x": None, "y": None, "border": False}, 
-        {"w": 3, "h": 3, "x": None, "y": None, "border": False}, 
-        {"w": 5, "h": 1, "x": None, "y": None, "border": False},
-        {"w": 3, "h": 1, "x": None, "y": None, "border": False},  
-        {"w": 2, "h": 2, "x": None, "y": None, "border": False}, 
-        {"w": 3, "h": 5, "x": None, "y": None, "border": False}, 
-    ]
+    data_path = "data"
+    result_path = "result"
+    file_name = "2.json"
     panel_width = 10
     panel_height = 10
-    solve(all_block, panel_width, panel_height)
+    solve(os.path.join(data_path, file_name), panel_width, panel_height)
