@@ -17,7 +17,7 @@ class Plotter:
         for i, block in enumerate(self.result["block"]):
             x, y, w, h = block['x'], block['y'], block['w'], block['h']
             if block["border"]:
-                matrix[x:x+w, y:y+h] = 0
+                matrix[x:x+w, y:y+h] = -1
             else:
                 matrix[x:x+w, y:y+h] = i + 1
         fig = sns.heatmap(pd.DataFrame(matrix), annot=True).get_figure()
@@ -35,7 +35,10 @@ class Plotter:
 
 
 if __name__ == "__main__":
-    result_path = "result/2.json"
+    # result_path = "result/3.json"
+    # result_path = "result/0004.json"
+    # result_path = "result/0005.json"
+    result_path = "result/0001_d=10.json"
     plotter = Plotter(result_path)
     # plotter.plot_plotly_heatmap()
     plotter.plot_sns_heatmap()
