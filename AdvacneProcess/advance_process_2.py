@@ -7,9 +7,10 @@ def solve(all_block, wafer_width, wafer_height):
     ### wafer sampling
     # Number of blocks
     n = len(all_block)
+    print(f"n: {n}")
 
     # wafer Variables
-    all_wafer_x_st, all_wafer_y_st, all_wafer_x_ed, all_wafer_y_ed, sampled = [], [], [], [], []
+    all_wafer_x_st, all_wafer_y_st, all_wafer_x_ed, all_wafer_y_ed, sampled, all_ng = [], [], [], [], [], []
     for i, block in enumerate(all_block):
         if block['x'] == None:
             all_wafer_x_st.append(model.NewIntVar(0, wafer_width - block['w'], f"wafer_x{i}"))
@@ -27,6 +28,10 @@ def solve(all_block, wafer_width, wafer_height):
             sampled.append(model.NewBoolVar(f"sampled_{i}"))
         else:
             sampled.append(model.NewConstant(1))
+        if block['ng']:
+            all_ng.append(model.NewConstant(1))
+        else:
+            all_ng.append(model.NewConstant(0))
 
     # wafer width & height constraints
     for i, block in enumerate(all_block):
@@ -61,14 +66,18 @@ def solve(all_block, wafer_width, wafer_height):
         all_panel_x_ed.append(model.NewIntVar(-panel_width, panel_width, f"panel_x_end{i}"))
         all_panel_y_st.append(model.NewIntVar(0, panel_height - block['h'], f"panel_y{i}"))
         all_panel_y_ed.append(model.NewIntVar(-panel_height, panel_height, f"panel_y_end{i}"))
-        # on_panel.append(model.NewBoolVar(f"on_panel_{i}"))
+        on_panel.append(model.NewBoolVar(f"on_panel_{i}"))
     
-    # panel width & height constraints
+    # exclude ng
     for i, block in enumerate(all_block):
-        model.Add(all_panel_x_ed[i] == all_panel_x_st[i] + block['w']).OnlyEnforceIf(sampled[i])
-        model.Add(all_panel_y_ed[i] == all_panel_y_st[i] + block['h']).OnlyEnforceIf(sampled[i])
-        model.Add(all_panel_x_ed[i] <= panel_width).OnlyEnforceIf(sampled[i])
-        model.Add(all_panel_y_ed[i] <= panel_height).OnlyEnforceIf(sampled[i])
+        model.AddBoolAnd([sampled[i], all_ng[i].Not()]).OnlyEnforceIf(on_panel[i])
+    # panel width & height constraints
+    
+    for i, block in enumerate(all_block):
+        model.Add(all_panel_x_ed[i] == all_panel_x_st[i] + block['w']).OnlyEnforceIf(on_panel[i])
+        model.Add(all_panel_y_ed[i] == all_panel_y_st[i] + block['h']).OnlyEnforceIf(on_panel[i])
+        model.Add(all_panel_x_ed[i] <= panel_width).OnlyEnforceIf(on_panel[i])
+        model.Add(all_panel_y_ed[i] <= panel_height).OnlyEnforceIf(on_panel[i])
     
     # panel Non-overlapping constraints
     for i in range(n):
@@ -87,18 +96,18 @@ def solve(all_block, wafer_width, wafer_height):
                             panel_by_ij.Not(), panel_by_ji.Not()])
 
     # panel must be filled by blocks
-    model.Add(sum(sampled[i] * block['w'] * block['h'] for i, block in enumerate(all_block)) == panel_width * panel_height)
+    model.Add(sum(on_panel[i] * block['w'] * block['h'] for i, block in enumerate(all_block)) == panel_width * panel_height)
 
     # Objective function
     wafer_area = wafer_width * wafer_height
     blocks_area = model.NewIntVar(0, wafer_area, "blocks_area")
     model.Add(
         blocks_area == sum(
-            sampled[i] *
+            on_panel[i] *
             block['w'] *
             block['h'] for i, block in enumerate(all_block)))
     num_blocks_sampled = model.NewIntVar(0, n, "num_blocks_sampled")
-    model.Add(num_blocks_sampled == sum(sampled[i] for i, block in enumerate(all_block)))
+    model.Add(num_blocks_sampled == sum(on_panel[i] for i, block in enumerate(all_block)))
 
     scale = 1000000
     # wafer_coverage
@@ -123,14 +132,16 @@ def solve(all_block, wafer_width, wafer_height):
 
     # Print
     if status == cp_model.OPTIMAL:
-        wafer_positions = [(solver.Value(all_wafer_x_st[i]), solver.Value(all_wafer_y_st[i]))
-                     for i in range(n)]
-        panel_positions = [(solver.Value(all_panel_x_st[i]), solver.Value(all_panel_y_st[i]))
-                     for i in range(n)]
-        print(f"wafer_positions: {wafer_positions}\n"
-              f"panel_positions: {panel_positions}\n"
+        block_positions_on_wafer = [(solver.Value(all_wafer_x_st[i]), solver.Value(all_wafer_y_st[i]))
+                     for i in range(n) if solver.Value(on_panel[i])]
+        block_positions_on_panel = [(solver.Value(all_panel_x_st[i]), solver.Value(all_panel_y_st[i]))
+                     for i in range(n) if solver.Value(on_panel[i])]
+        print(f"block_positions_on_wafer: {block_positions_on_wafer}\n"
+              f"block_positions_on_panel: {block_positions_on_panel}\n"
               f"num_blocks_sampled: {solver.Value(num_blocks_sampled)}\n"
-              f"sampled: {[solver.Value(sampled[i]) for i in range(n)]}\n"
+            #   f"sampled: {[solver.Value(sampled[i]) for i in range(n)]}\n"
+            #   f"on_panel: {[solver.Value(on_panel[i]) for i in range(n)]}\n"
+              f"blocks_on_panel: {[(block['w'], block['h']) for i, block in enumerate(all_block) if solver.Value(on_panel[i])]}\n"
               f"wafer_coverage: {solver.Value(wafer_coverage) / scale}\n"
               f"block_utilization: {solver.Value(block_utilization) / scale}\n"
               f"objective: {solver.ObjectiveValue()}")
@@ -154,8 +165,8 @@ def solve(all_block, wafer_width, wafer_height):
 if __name__ == "__main__":
     data_path = "block_data"
     result_path = "result"
-    # file_name = "0004.json"
-    file_name = "0005.json"
+    file_name = "0003.json"
+    # file_name = "0005.json"
     # file_name = "0001_d=10.json"
     # Create the model
     model = cp_model.CpModel()
